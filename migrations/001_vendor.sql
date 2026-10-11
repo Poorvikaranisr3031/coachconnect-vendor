@@ -1,0 +1,1 @@
+CREATE TABLE vendors (id UUID PRIMARY KEY DEFAULT gen_random_uuid(), stall_name TEXT NOT NULL, station TEXT NOT NULL, platform TEXT NOT NULL DEFAULT '', stall_location TEXT NOT NULL DEFAULT '', contact_name TEXT NOT NULL DEFAULT '', updated_at TIMESTAMPTZ NOT NULL DEFAULT now())

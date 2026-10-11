@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#173f35">
+  <meta name="description" content="Manage your CoachConnect railway stall profile, coach coverage and menu availability.">
+  <title>CoachConnect Vendor</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/style.css">
+  <style>#hb-badge{display:none!important}</style>
+</head>
+<body>
+<header class="topbar">
+  <a class="brand" href="#" aria-label="CoachConnect Vendor home"><span class="brand-mark">CC</span><span>CoachConnect<small>VENDOR WORKSPACE</small></span></a>
+  <div class="top-actions"><span id="account-state" class="account-state">Checking account…</span><button id="auth-button" class="button button-outline" type="button">Vendor sign in</button></div>
+</header>
+<div class="app-shell">
+  <aside class="sidebar">
+    <div class="sidebar-label">YOUR WORKSPACE</div>
+    <button class="nav-item active" data-page="dashboard" type="button"><span>⌂</span> Overview</button>
+    <button class="nav-item" data-page="menu" type="button"><span>☷</span> Menu & availability</button>
+    <button class="nav-item" data-page="profile" type="button"><span>⌖</span> Stall details</button>
+    <div class="sidebar-bottom"><span class="online-dot"></span><span>Vendor workspace</span></div>
+  </aside>
+  <main class="main-content">
+    <div class="breadcrumb"><span>CoachConnect</span><span>/</span><strong id="crumb">Overview</strong><span class="spacer"></span><span class="date-chip" id="today-label"></span></div>
+
+    <section id="page-dashboard" class="page">
+      <div class="overview-hero"><div><div class="eyebrow">VENDOR DASHBOARD</div><h1>Your stall, made easy<span class="blue-dot">.</span></h1><p>Keep your location and menu up to date so passengers can find your stall by station and coach.</p></div><div class="overview-actions"><button class="button button-primary" data-page="menu" type="button">＋ Manage menu</button><button class="button button-outline" data-page="profile" type="button">Edit stall details</button></div></div>
+      <div id="vendor-gate" class="notice-card"><div class="notice-symbol">↗</div><div><strong>Set up your vendor workspace</strong><p>Sign in to add your stall location, coach coverage and menu. No orders or payments are handled here.</p></div><button class="button button-primary" id="gate-signin" type="button">Vendor sign in →</button></div>
+      <div class="stats-grid">
+        <article class="stat-card"><div class="stat-label">Menu items</div><div class="stat-value" id="stat-items">—</div><div class="stat-foot">Items you have listed</div></article>
+        <article class="stat-card"><div class="stat-label">Available</div><div class="stat-value" id="stat-available">—</div><div class="stat-foot">Shown to passengers</div></article>
+        <article class="stat-card"><div class="stat-label">Unavailable</div><div class="stat-value" id="stat-unavailable">—</div><div class="stat-foot">Hidden until switched on</div></article>
+        <article class="stat-card"><div class="stat-label">Coach coverage</div><div class="stat-value stat-value-text" id="stat-coaches">Not set</div><div class="stat-foot">Coaches your stall serves</div></article>
+      </div>
+      <article class="panel setup-panel"><div class="panel-heading"><div><h2>Setup checklist</h2><p class="muted">A quick view of what is ready and what still needs attention.</p></div><span id="setup-count" class="setup-count">0 of 3 complete</span></div><div id="setup-checklist" class="setup-checklist"><div class="empty-inline">Sign in to check your setup progress.</div></div></article>
+      <div class="two-column">
+        <article class="panel">
+          <div class="panel-heading"><div><h2>Stall details</h2><p class="muted">Your location and coach coverage</p></div><button class="button button-small button-outline" data-page="profile" type="button">Edit details</button></div>
+          <div id="profile-summary" class="profile-summary"><div class="empty-inline">Sign in and save your stall details to get started.</div></div>
+        </article>
+        <article class="panel">
+          <div class="panel-heading"><div><h2>Menu readiness</h2><p class="muted">What passengers can currently see</p></div><span class="stat-icon">✓</span></div>
+          <div id="menu-readiness" class="readiness-list"><div class="empty-inline">Your menu status will appear here.</div></div>
+          <button class="button button-outline button-full" data-page="menu" type="button">Review menu availability</button>
+        </article>
+      </div>
+      <article class="panel integration-panel">
+        <div class="integration-mark">↔</div><div><h2>Ready for passenger-app integration</h2><p class="muted">A read-only stall directory is being prepared so the passenger app can find stalls by station and coach. Ordering and payments are not part of this vendor app.</p><code>GET /api/public/stalls?station=SBC&coach=S4</code></div>
+      </article>
+    </section>
+
+    <section id="page-menu" class="page hidden">
+      <div class="page-heading"><div><div class="eyebrow">MENU CATALOGUE</div><h1>Menu & availability<span class="blue-dot">.</span></h1><p class="muted">Add menu items and prices, then switch each item available or unavailable. No stock counts are needed.</p></div><button id="add-item" class="button button-primary" type="button">＋ Add menu item</button></div>
+      <div class="toolbar"><input id="menu-search" aria-label="Search menu" placeholder="Search items or categories…"><select id="menu-filter" aria-label="Filter menu"><option value="all">All items</option><option value="available">Available</option><option value="unavailable">Unavailable</option></select></div>
+      <div class="panel table-panel"><div class="table-scroll"><table><thead><tr><th>ITEM</th><th>CATEGORY</th><th>PRICE</th><th>AVAILABILITY</th><th>ACTIONS</th></tr></thead><tbody id="menu-rows"></tbody></table></div><div id="menu-empty" class="empty-state">No menu items yet. Add your first item above.</div></div>
+      <p class="muted footnote">Tip: switch an item off whenever it is not available. Turn it back on when passengers can order/find it again.</p>
+    </section>
+
+    <section id="page-profile" class="page hidden">
+      <div class="page-heading"><div><div class="eyebrow">STALL INFORMATION</div><h1>Stall details<span class="blue-dot">.</span></h1><p class="muted">Tell passengers where your stall is and which coaches it serves.</p></div></div>
+      <article class="panel form-panel"><form id="stall-form">
+        <div class="form-grid">
+          <label>Stall name *<input id="stall-name" required maxlength="100" placeholder="e.g. Platform Fresh Bites"></label>
+          <label>Railway station *<input id="station" required maxlength="150" placeholder="e.g. Bengaluru City Junction"></label>
+          <label>Platform number / area<input id="platform" maxlength="100" placeholder="e.g. Platform 3"></label>
+          <label>Stall landmark<input id="location" maxlength="200" placeholder="e.g. Near the foot overbridge"></label>
+          <label class="coach-field">Coaches served *<input id="served-coaches" required maxlength="500" placeholder="e.g. S1, S2, S3, B1"><small class="muted">Enter coach codes separated by commas. Use ALL only if your stall serves every coach at this station. Match the coach labels passengers see.</small></label>
+          <label>Contact name<input id="contact" maxlength="100" placeholder="Stall owner / manager"></label>
+          <label>Contact phone (optional)<input id="contact-phone" type="tel" maxlength="20" placeholder="Your contact number"></label>
+        </div>
+        <div class="form-actions"><span id="profile-message" class="form-message" role="status"></span><button class="button button-primary" type="submit" id="save-profile">Save stall details</button></div>
+      </form></article>
+      <!-- Coach coverage explanation removed as requested. -->
+    </section>
+
+    <footer class="app-footer">© 2026 CoachConnect <span>Vendor tools for stall details and menu availability.</span></footer>
+  </main>
+</div>
+
+<div id="item-modal" class="modal-backdrop hidden" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+  <div class="modal"><div class="modal-heading"><div><div class="eyebrow">MENU MANAGEMENT</div><h2 id="modal-title">Add menu item</h2></div><button id="close-modal" class="close-button" type="button" aria-label="Close">×</button></div>
+    <form id="item-form"><input type="hidden" id="edit-id">
+      <label>Item name *<input id="edit-name" required maxlength="120" placeholder="Masala dosa"></label>
+      <label>Description (optional)<input id="edit-description" maxlength="300" placeholder="Short description"></label>
+      <div class="form-grid">
+        <label>Category<select id="edit-category"><option>Snacks</option><option>Meals</option><option>Beverages</option><option>Breakfast</option><option>Desserts</option><option>Other</option></select></label>
+        <label>Price (₹) *<input id="edit-price" type="number" min="0" step="0.5" required></label>
+        <label class="check-label"><input id="edit-available" type="checkbox" checked> Available for passengers</label>
+      </div>
+      <div class="modal-actions"><button type="button" class="button button-outline" id="cancel-modal">Cancel</button><button type="submit" class="button button-primary" id="save-item">Save item</button></div><p id="item-message" class="form-message" role="status"></p>
+    </form>
+  </div>
+</div>
+<div id="toast" class="toast" role="status" aria-live="polite"></div>
+<script src="/app.js" defer></script>
+</body>
+</html>
