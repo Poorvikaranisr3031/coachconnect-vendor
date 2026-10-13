@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#0f766e"><meta name="description" content="Find railway food stalls by station and coach.">
+<title>CoachConnect Passenger</title><link rel="stylesheet" href="/passenger/style.css">
+</head>
+<body>
+<header class="topbar"><a class="brand" href="/">🚆 CoachConnect</a><span class="pill">PASSENGER</span><a class="login-link" href="/passenger/track-train">Live train tracking</a><a class="login-link" href="/passenger/login">Sign in</a></header>
+<main>
+<section class="hero"><p class="eyebrow">FOOD AT YOUR COACH</p><h1>Your train. Your coach.<br><span>Food within reach.</span></h1><p class="lead">Sign in and verify your railway station area to track a train live, see its next station, and find registered stalls with available menus.</p></section>
+<section class="panel">
+<div class="step-heading"><span class="step">1</span><div><h2>Find stalls</h2><p>Passenger sign-in is required before searching. Verify your live location near a railway station first.</p></div></div>
+<form id="searchForm">
+<label for="station">Railway station name</label><input id="station" name="station" placeholder="e.g. Yelahanka, Mysuru Junction, Chennai Central" maxlength="150" required autocomplete="organization">
+<p class="hint">Use the station name entered by vendors in their stall profile.</p>
+<label for="coach">Coach number</label><div class="search-row"><input id="coach" name="coach" placeholder="e.g. S4, B2, A1" maxlength="12" required autocomplete="off"><button class="primary" type="submit">Find stalls</button></div>
+<p id="searchMessage" class="message" role="status">Checking passenger sign-in…</p>
+</form>
+</section>
+<section id="resultsSection" class="results hidden"><div class="results-head"><div><p class="eyebrow">MATCHING STALLS</p><h2 id="resultsTitle">Stalls for your coach</h2></div><span id="resultCount" class="count">0 stalls</span></div><div id="results" class="stall-grid"></div><div id="emptyState" class="empty hidden"><div class="empty-icon">🍱</div><h3>No matching stalls found</h3><p>There are no registered stalls with available menu items for this station and coach yet. Check the station spelling or try again later.</p></div></section>
+</main><footer>CoachConnect · Connecting passengers with railway food stalls</footer><script src="/passenger/app.js" defer></script>
+</body></html>

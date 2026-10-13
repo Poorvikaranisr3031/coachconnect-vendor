@@ -1,3 +1,9 @@
 [auth]
 enabled = true
 providers = ["email"]
+
+[[secret]]
+name = "RAILKIT_API_KEY"
+
+[[secret]]
+name = "RAILRADAR_API_KEY"

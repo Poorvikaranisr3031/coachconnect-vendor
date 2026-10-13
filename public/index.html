@@ -9,12 +9,12 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/style.css">
-  <style>#hb-badge{display:none!important}</style>
+  <style>#hb-badge,#hatchable-badge,[id*="hatchable-badge"],[class*="hatchable-badge"],[data-hatchable-badge]{display:none!important}</style>
 </head>
 <body>
 <header class="topbar">
   <a class="brand" href="#" aria-label="CoachConnect Vendor home"><span class="brand-mark">CC</span><span>CoachConnect<small>VENDOR WORKSPACE</small></span></a>
-  <div class="top-actions"><span id="account-state" class="account-state">Checking account…</span><button id="auth-button" class="button button-outline" type="button">Vendor sign in</button></div>
+  <div class="top-actions"><a class="button button-outline" href="/passenger/">Passenger app</a><a class="button button-outline" href="/passenger/track-train">Train tracking</a><span id="account-state" class="account-state">Checking account…</span><button id="auth-button" class="button button-outline" type="button">Vendor sign in</button></div>
 </header>
 <div class="app-shell">
   <aside class="sidebar">
@@ -48,16 +48,14 @@
           <button class="button button-outline button-full" data-page="menu" type="button">Review menu availability</button>
         </article>
       </div>
-      <article class="panel integration-panel">
-        <div class="integration-mark">↔</div><div><h2>Ready for passenger-app integration</h2><p class="muted">A read-only stall directory is being prepared so the passenger app can find stalls by station and coach. Ordering and payments are not part of this vendor app.</p><code>GET /api/public/stalls?station=SBC&coach=S4</code></div>
-      </article>
+      <!-- Passenger app reads the public stall directory directly. -->
     </section>
 
     <section id="page-menu" class="page hidden">
       <div class="page-heading"><div><div class="eyebrow">MENU CATALOGUE</div><h1>Menu & availability<span class="blue-dot">.</span></h1><p class="muted">Add menu items and prices, then switch each item available or unavailable. No stock counts are needed.</p></div><button id="add-item" class="button button-primary" type="button">＋ Add menu item</button></div>
       <div class="toolbar"><input id="menu-search" aria-label="Search menu" placeholder="Search items or categories…"><select id="menu-filter" aria-label="Filter menu"><option value="all">All items</option><option value="available">Available</option><option value="unavailable">Unavailable</option></select></div>
       <div class="panel table-panel"><div class="table-scroll"><table><thead><tr><th>ITEM</th><th>CATEGORY</th><th>PRICE</th><th>AVAILABILITY</th><th>ACTIONS</th></tr></thead><tbody id="menu-rows"></tbody></table></div><div id="menu-empty" class="empty-state">No menu items yet. Add your first item above.</div></div>
-      <p class="muted footnote">Tip: switch an item off whenever it is not available. Turn it back on when passengers can order/find it again.</p>
+      <!-- Redundant menu tip removed. -->
     </section>
 
     <section id="page-profile" class="page hidden">
@@ -65,7 +63,7 @@
       <article class="panel form-panel"><form id="stall-form">
         <div class="form-grid">
           <label>Stall name *<input id="stall-name" required maxlength="100" placeholder="e.g. Platform Fresh Bites"></label>
-          <label>Railway station *<input id="station" required maxlength="150" placeholder="e.g. Bengaluru City Junction"></label>
+          <label>Railway station *<input id="station" required maxlength="150" placeholder="e.g. SBC (Bengaluru City Junction)"><small class="muted">Use the official or commonly used railway station name consistently so passengers can find your stall.</small></label>
           <label>Platform number / area<input id="platform" maxlength="100" placeholder="e.g. Platform 3"></label>
           <label>Stall landmark<input id="location" maxlength="200" placeholder="e.g. Near the foot overbridge"></label>
           <label class="coach-field">Coaches served *<input id="served-coaches" required maxlength="500" placeholder="e.g. S1, S2, S3, B1"><small class="muted">Enter coach codes separated by commas. Use ALL only if your stall serves every coach at this station. Match the coach labels passengers see.</small></label>
@@ -97,5 +95,6 @@
 </div>
 <div id="toast" class="toast" role="status" aria-live="polite"></div>
 <script src="/app.js" defer></script>
+<script src="/role-gate.js" defer></script>
 </body>
 </html>

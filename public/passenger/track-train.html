@@ -1,0 +1,13 @@
+<!doctype html>
+<html lang="en">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#0f766e"><meta name="description" content="Track your train and find registered food stalls at its next stop."><title>Track Train · CoachConnect</title><link rel="stylesheet" href="/passenger/style.css"></head>
+<body>
+<header class="topbar"><a class="brand" href="/">🚆 CoachConnect</a><span class="pill">PASSENGER</span><a class="login-link" href="/passenger/">Stall search</a></header>
+<main>
+<section class="hero"><p class="eyebrow">LIVE TRAIN TRACKING</p><h1>Find your train’s<br><span>next stop.</span></h1><p class="lead">Enter your train number and journey date to see the next station and registered stalls with available menu items there.</p></section>
+<section class="panel"><div class="step-heading"><span class="step">1</span><div><h2>Track your train</h2><p>Sign in as a passenger first. Train number must contain five digits.</p></div></div>
+<form id="trackForm"><label for="trainNumber">Train number</label><input id="trainNumber" name="trainNumber" inputmode="numeric" pattern="[0-9]{5}" maxlength="5" placeholder="e.g. 12027" required><label for="journeyDate" style="margin-top:16px">Journey date</label><input id="journeyDate" name="date" type="date" required><button class="primary" id="trackButton" type="submit" style="width:100%;margin-top:18px">Track train</button><p id="trackMessage" class="message" role="status">Checking passenger sign-in…</p></form></section>
+<section id="trainResults" class="results hidden"><div class="panel"><p class="eyebrow">LIVE STATUS</p><h2 id="trainTitle">Train details</h2><p id="trainStatus" class="lead"></p><div class="station-card"><span class="station-icon">🚉</span><div><strong id="nextStation">Next station</strong><p id="nextCode"></p><p id="nextDistance"></p></div><span id="liveBadge" class="station-status">Status</span></div><p id="currentStation" class="message"></p><p id="updatedAt" class="message"></p></div>
+<div class="results-head" style="margin-top:26px"><div><p class="eyebrow">AT THE NEXT STOP</p><h2 id="stallHeading">Available stalls</h2></div><span id="stallCount" class="count">0 stalls</span></div><div id="stallResults" class="stall-grid"></div><div id="stallEmpty" class="empty hidden"><div class="empty-icon">🍱</div><h3>No registered stalls found</h3><p>No registered stalls with available menu items were found for the next station yet.</p></div></section>
+</main><footer>CoachConnect · Live tracking powered by RailRadar</footer><script src="/passenger/track-train.js" defer></script>
+</body></html>

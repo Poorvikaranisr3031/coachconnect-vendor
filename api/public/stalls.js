@@ -1,25 +1,50 @@
 import { db } from 'hatchable';
+import { currentPassengerUser } from '../../lib/passenger-auth.js';
 export const access = 'public';
 
-// Read-only, CORS-enabled discovery endpoint for the future passenger app.
-// Example: GET /api/public/stalls?station=SBC&coach=S4
+// Read-only directory consumed by the separate CoachConnect Passenger App.
+// Ordering and payments are intentionally not supported.
+const STATION_ALIASES = {
+  sbc: ['sbc', 'bengaluru city junction', 'bengaluru city', 'bangalore city junction']
+};
+function normalizeStation(value) {
+  return String(value || '').trim().toLowerCase().replace(/\s+/g, ' ');
+}
+function stationMatches(value, filter) {
+  if (!filter) return true;
+  const station = normalizeStation(value);
+  const aliases = STATION_ALIASES[filter] || [filter];
+  // Accept the same station written with a common longer/shorter name
+  // (for example "Mysuru" and "Mysuru Junction"), not just SBC aliases.
+  return aliases.includes(station) || station === filter || station.includes(filter) || filter.includes(station);
+}
+function normalizeCoach(value) {
+  return String(value || '').trim().toUpperCase().replace(/\s+/g, '');
+}
 export default async function (req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+  res.setHeader('Cache-Control', 'no-store');
 
   if (req.method === 'OPTIONS') return res.status(204).send('');
   if (req.method !== 'GET') return res.status(405).json({ error: 'Method not allowed.' });
 
   try {
-    const stationFilter = String(req.query?.station || '').trim().toLowerCase();
-    const coachFilter = String(req.query?.coach || '').trim().toUpperCase();
+    const passenger = await currentPassengerUser(req);
+    if (!passenger) return res.status(401).json({ error: 'Please verify your location and sign in as a passenger to search stalls and menus.' });
+    const stationFilter = normalizeStation(req.query?.station);
+    const coachFilter = normalizeCoach(req.query?.coach);
+    if (stationFilter.length > 150) return res.status(400).json({ error: 'Station filter is too long.' });
+    if (coachFilter && !/^[A-Z0-9-]{1,12}$/.test(coachFilter)) {
+      return res.status(400).json({ error: 'Enter a valid coach number such as S4 or B2.' });
+    }
 
     const vendorsResult = await db.query(
       'SELECT id, stall_name, station, platform, stall_location, served_coaches FROM vendors WHERE user_id IS NOT NULL ORDER BY stall_name ASC LIMIT 500'
     );
     if (!vendorsResult.rows.length) {
-      return res.json({ stalls: [], count: 0, filters: { station: stationFilter || null, coach: coachFilter || null } });
+      return res.json({ stalls: [], count: 0, filters: { station: stationFilter || null, coach: coachFilter || null }, note: 'No registered vendor profiles are available yet.' });
     }
 
     const menuResult = await db.query(
@@ -40,11 +65,11 @@ export default async function (req, res) {
     }
 
     const stalls = vendorsResult.rows
-      .filter(vendor => !stationFilter || String(vendor.station || '').toLowerCase().includes(stationFilter))
+      .filter(vendor => stationMatches(vendor.station, stationFilter))
       .map(vendor => {
         const coaches = String(vendor.served_coaches || '')
           .split(/[\n,;]+/)
-          .map(value => value.trim().toUpperCase())
+          .map(normalizeCoach)
           .filter(Boolean);
         return {
           id: vendor.id,
